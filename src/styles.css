@@ -273,11 +273,35 @@ button {
 
 .status-panel {
   min-width: min(300px, 100%);
-  padding: 18px;
+  padding: 16px;
   border-radius: 22px;
   background: var(--paper-strong);
   border: 1px dashed rgba(114, 245, 184, 0.28);
   box-shadow: inset 0 0 0 1px rgba(87, 255, 177, 0.06);
+}
+
+.parent-pin-panel {
+  min-width: min(280px, 100%);
+  padding: 12px;
+}
+
+.parent-pin-panel .field {
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.parent-pin-panel .field input {
+  padding: 10px 12px;
+}
+
+.parent-pin-panel .button-row {
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.parent-pin-panel .primary-button,
+.parent-pin-panel .secondary-button {
+  padding: 12px 18px;
 }
 
 .status-chip,
@@ -433,6 +457,24 @@ button {
   border: 1px solid rgba(87, 255, 177, 0.08);
 }
 
+.admin-code-card {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 8px;
+  padding-top: 18px;
+}
+
+.admin-code {
+  margin: 0;
+  font-size: clamp(2.6rem, 8vw, 4.5rem);
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+  color: var(--berry);
+  text-shadow: 0 0 14px rgba(114, 245, 184, 0.3);
+}
+
 .mission-panel-header {
   display: flex;
   justify-content: space-between;
@@ -567,7 +609,7 @@ button {
 
 .field input {
   width: 100%;
-  padding: 14px 16px;
+  padding: 12px 14px;
   border-radius: 16px;
   border: 1px solid rgba(87, 255, 177, 0.14);
   background: rgba(5, 18, 15, 0.92);
@@ -1022,5 +1064,10 @@ button {
     background: white;
     border: 1px solid #ccc;
     padding: 16px;
+  }
+
+  .admin-code {
+    color: black;
+    text-shadow: none;
   }
 }

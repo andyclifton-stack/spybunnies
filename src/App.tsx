@@ -228,7 +228,7 @@ function App() {
     setCodeFeedback(
       isFinalMission
         ? 'Treasure unlocked. Spy Bunnies, mission complete!'
-        : `Mission ${currentMission.id} cleared. Next clue incoming.`,
+        : `Code accepted. Mission ${currentMission.id + 1} is ready. Press Listen Now.`,
     );
     setFeedbackTone('success');
 
@@ -237,13 +237,6 @@ function App() {
     } else {
       playSound(playSuccessSound);
     }
-  }
-
-  function toggleSound(): void {
-    setGameState((current) => ({
-      ...current,
-      soundEnabled: !current.soundEnabled,
-    }));
   }
 
   function resetGame(): void {
@@ -316,14 +309,6 @@ function App() {
               Agent Access
             </button>
           ) : null}
-          <button
-            type="button"
-            className="secondary-button"
-            onClick={toggleSound}
-            aria-pressed={gameState.soundEnabled}
-          >
-            {gameState.soundEnabled ? 'Sound On' : 'Sound Off'}
-          </button>
         </div>
       </header>
 
@@ -531,7 +516,7 @@ function PrepScreen({
           </p>
         </div>
 
-        <div className="status-panel">
+        <div className="status-panel parent-pin-panel">
           <div className="status-chip">
             {missionsCompleted} / {MISSIONS.length} missions solved
           </div>
@@ -546,7 +531,7 @@ function PrepScreen({
       </section>
 
       <section className="panel">
-        <h3>Mission Cheat Sheet</h3>
+        <h3>Code Slip Pack</h3>
         <div className="mission-list">
           {MISSIONS.map((mission) => (
             <article className="mission-item" key={mission.id}>
@@ -554,13 +539,14 @@ function PrepScreen({
                 <p className="mission-kicker">Mission {mission.id}</p>
                 <h4>{mission.title}</h4>
                 <p>{mission.prepHint}</p>
+                <div className="admin-clue-block admin-code-card">
+                  <p className="spy-id-kicker">Code Slip To Hide</p>
+                  <p className="admin-code">{mission.acceptedCodes[0]}</p>
+                </div>
                 <div className="admin-clue-block">
-                  <p className="spy-id-kicker">Printable clue</p>
+                  <p className="spy-id-kicker">Mission app clue reference</p>
                   <TextBlocks text={mission.clueText} />
                 </div>
-              </div>
-              <div className="answer-chip">
-                Code: {mission.acceptedCodes.join(' / ')}
               </div>
             </article>
           ))}
@@ -577,7 +563,7 @@ function PrepScreen({
           </button>
         ) : null}
         <button type="button" className="secondary-button" onClick={onPrint}>
-          Print Clues & Codes
+          Print Code Pack
         </button>
         <button type="button" className="danger-button" onClick={onReset}>
           Reset Game
@@ -611,7 +597,7 @@ function ParentsPinScreen({
             curious Spy Bunnies.
           </p>
         </div>
-        <div className="status-panel">
+        <div className="status-panel parent-pin-panel">
           <label className="field">
             <span>PIN</span>
             <input
@@ -1231,10 +1217,10 @@ function MissionTransmissionPanel({
 }) {
   return (
     <NarratedRevealPanel
-      buttonLabel="Decrypt & Read Mission"
-      lockedLabel="Transmission locked. Press the button to reveal the mission."
+      buttonLabel="Listen Now"
+      lockedLabel="Mission locked. Press Listen Now to hear and reveal it."
       panelTitle="Secure Mission Transmission"
-      replayLabel="Replay Mission Transmission"
+      replayLabel="Listen Again"
       speechText={`${mission.title}. ${mission.clueText.replace(/\n/g, ' ')} Team rule. ${mission.teamRule}`}
       text={mission.clueText}
     />

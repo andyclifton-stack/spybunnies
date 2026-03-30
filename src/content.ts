@@ -68,7 +68,8 @@ export const MISSIONS: Mission[] = [
     clueText:
       'Welcome, Spy Bunnies.\nBefore the hunt begins, choose your role cards and stay together.\n\nYour first mission is to find the cold keeper.\n\nRiddle:\nI keep milk cold and fruit nice too,\nOpen my door to find your clue.',
     acceptedCodes: ['BEEP'],
-    prepHint: 'Give this clue by hand and hide the next one in the fridge.',
+    prepHint:
+      'Start by handing over Mission 1. Hide the BEEP code slip in the fridge.',
     teamRule:
       'Everyone puts one hand in the middle and says "Spy Bunnies ready!" before the search begins.',
     leadPrompt:
@@ -81,7 +82,7 @@ export const MISSIONS: Mission[] = [
       'The next clue is hidden where frozen things stay.\nBut first you must travel the Bunny Chain way.\n\nLine up youngest to oldest.\nHold hands the whole time.\nDo not let go.\n\nThe youngest bunny finds the clue while the others may help with one free hand only.',
     acceptedCodes: ['HOPS'],
     prepHint:
-      'Hide this clue in the freezer under frozen chips or another safe item.',
+      'Hide the HOPS code slip in the freezer under frozen chips or another safe item.',
     teamRule:
       'Move in age order, stay linked together, and help the youngest Lead Bunny with only one free hand each.',
     leadPrompt:
@@ -93,7 +94,7 @@ export const MISSIONS: Mission[] = [
     clueText:
       'Spy code: DEB\n\nUnscramble it to find where next.\nThen the whole team must bunny-hop there together.',
     acceptedCodes: ['NIBS'],
-    prepHint: 'Hide this clue on a bed or tucked beneath a pillow.',
+    prepHint: 'Hide the NIBS code slip on a bed or tucked beneath a pillow.',
     teamRule:
       'Nobody sprints ahead. Solve the code together and hop there as one team.',
     leadPrompt:
@@ -105,7 +106,7 @@ export const MISSIONS: Mission[] = [
     clueText:
       'You may not search yet.\nFirst, study this room for 15 seconds.\nThen close your eyes.\n\nThe team must name:\n- one soft thing\n- one thing with a colour on it\n- one thing with letters on it\n\nWhen all 3 are answered, solve this:\nI show films and cartoons too,\nIn the lounge waits your next clue.',
     acceptedCodes: ['GLOW'],
-    prepHint: 'Hide this clue by the television in the lounge.',
+    prepHint: 'Hide the GLOW code slip by the television in the lounge.',
     teamRule:
       'The team must complete the memory test before anyone searches or moves on.',
     leadPrompt:
@@ -117,7 +118,7 @@ export const MISSIONS: Mission[] = [
     clueText:
       'Read the first letter of each line:\n\nCounting hours every day\nLooking quietly on display\nOn the wall or shelf I stay\nClicking never, come what may\nKeeping time in my own way',
     acceptedCodes: ['JOLT'],
-    prepHint: 'Hide this clue by a clock.',
+    prepHint: 'Hide the JOLT code slip by a clock.',
     teamRule:
       'Nobody moves until the Checker Bunny says, "Code cracked."',
     leadPrompt:
@@ -129,7 +130,7 @@ export const MISSIONS: Mission[] = [
     clueText:
       'Mission first. Searching second.\n\nCarry one chocolate egg, pom-pom, or paper ball on a spoon from here to the next room.\nOnly the Lead Bunny holds the spoon.\nHelper Bunny may steady the Lead Bunny’s arm.\nIf it drops, everyone freezes and does 2 bunny hops before trying again.\n\nRiddle:\nI hold adventures, facts and tales,\nPaper worlds and pirate sails.',
     acceptedCodes: ['MINT'],
-    prepHint: 'Hide this clue inside a book or on a bookshelf.',
+    prepHint: 'Hide the MINT code slip inside a book or on a bookshelf.',
     teamRule:
       'Complete the spoon mission before solving or searching for the next clue.',
     leadPrompt:
@@ -141,7 +142,7 @@ export const MISSIONS: Mission[] = [
     clueText:
       'Take every second letter:\n\nsShHoOeEsS\n\nSolve it, then let the youngest bunny point to where you should go next.',
     acceptedCodes: ['DASH'],
-    prepHint: 'Hide this clue in the shoe area.',
+    prepHint: 'Hide the DASH code slip in the shoe area.',
     teamRule:
       'The youngest bunny must point to the next location and the team follows that point together.',
     leadPrompt:
@@ -153,7 +154,7 @@ export const MISSIONS: Mission[] = [
     clueText:
       'Before the next clue may be earned:\n- the Lead Bunny must wear two odd shoes or slippers\n- the whole team must march in a silly spy parade\n- the Checker Bunny decides when the parade is funny enough\n\nThen solve:\nUp and down I always go,\nBut never leave the house below.',
     acceptedCodes: ['ZOOM'],
-    prepHint: 'Hide this clue on the stairs.',
+    prepHint: 'Hide the ZOOM code slip on the stairs.',
     teamRule:
       'The parade must happen first, and only the Checker Bunny can declare it funny enough.',
     leadPrompt:
@@ -165,7 +166,7 @@ export const MISSIONS: Mission[] = [
     clueText:
       'This is a stealth mission.\nThe team must go to the next place as quietly as possible.\nIf anyone stomps loudly, everyone must go back and try again.\n\nRiddle:\nI run but have no feet,\nI have a ring but no finger.\nTurn me on to wash your hands.',
     acceptedCodes: ['WAVE'],
-    prepHint: 'Hide this clue by the bathroom sink.',
+    prepHint: 'Hide the WAVE code slip by the bathroom sink.',
     teamRule:
       'Move in full stealth mode. If anyone stomps, restart the quiet walk together.',
     leadPrompt:
@@ -177,7 +178,7 @@ export const MISSIONS: Mission[] = [
     clueText:
       'Trust mission.\nOne bunny closes their eyes.\nAnother bunny guides them using words only: "step left", "stop", "forward", and so on.\n\nWhen the mission is complete, solve this:\nI warm leftovers with a hum,\nPress my buttons, round they come.',
     acceptedCodes: ['PING'],
-    prepHint: 'Hide this clue near the microwave.',
+    prepHint: 'Hide the PING code slip near the microwave.',
     teamRule:
       'Only words may guide the chosen bunny. No pulling, pushing, or dragging.',
     leadPrompt:
@@ -189,7 +190,7 @@ export const MISSIONS: Mission[] = [
     clueText:
       'Move each letter back by one in the alphabet:\n\nDPBU DVQCPBSE\n\nClue Reader may ask one person at a time for help. Nobody shouts all at once.',
     acceptedCodes: ['BRIM'],
-    prepHint: 'Hide this clue in the coat cupboard.',
+    prepHint: 'Hide the BRIM code slip in the coat cupboard.',
     teamRule:
       'The Checker Bunny chooses who speaks next so the code is cracked calmly.',
     leadPrompt:
@@ -201,7 +202,8 @@ export const MISSIONS: Mission[] = [
     clueText:
       'Final team test.\nBefore the last location is revealed:\n- each bunny says one helpful thing another bunny did\n- all four put their hands together\n- everyone says, "Spy Bunnies never quit!"\n\nFinal clue:\nWhere people flop and chat and sprawl,\nLook underneath the softest of all.',
     acceptedCodes: ['GOLD'],
-    prepHint: 'Hide the final treasure under the sofa or inside the cushions.',
+    prepHint:
+      'Hide the GOLD code slip at the sofa or cushions, with the final treasure ready there too.',
     teamRule:
       'The mission only counts after every bunny shares something kind about another teammate.',
     leadPrompt:
