@@ -168,7 +168,7 @@ describe('App', () => {
     });
   });
 
-  test('rejects wrong codes, accepts correct codes, and rotates the lead bunny', async () => {
+  test('rejects wrong codes, accepts correct codes, and rotates the finder turn', async () => {
     const user = userEvent.setup();
     const players = makePlayers();
 
@@ -213,7 +213,7 @@ describe('App', () => {
       screen.getByRole('heading', { name: /mission 2: frozen fingers/i }),
     ).toBeInTheDocument();
     expect(screen.getAllByText(/Jellybean Jumper/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Lead Bunny/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Finder Bunny/i).length).toBeGreaterThan(0);
   });
 
   test('restores setup progress after refresh and reset returns to prep', async () => {

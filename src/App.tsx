@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import {
   APP_SUBTITLE,
   APP_TITLE,
   BUNNY_SWAP_PENALTY,
   DRESS_UP_OPTIONS,
+  FINDER_RULE_DESCRIPTION,
   GOLDEN_RULES,
   MISSIONS,
-  ROLE_DESCRIPTIONS,
   SPY_NAME_POOL,
   STORY_SETUP,
 } from './content';
@@ -228,7 +228,7 @@ function App() {
     setCodeFeedback(
       isFinalMission
         ? 'Treasure unlocked. Spy Bunnies, mission complete!'
-        : `Code accepted. Mission ${currentMission.id + 1} is ready. Press Listen Now.`,
+        : 'Code accepted. Press Listen Now for the next mission.',
     );
     setFeedbackTone('success');
 
@@ -341,10 +341,7 @@ function App() {
           />
         )
       ) : gameState.phase === 'prep' ? (
-        <LaunchScreen
-          onOpenParents={requestParentsSetup}
-          onStart={beginSetup}
-        />
+        <LaunchScreen onStart={beginSetup} />
       ) : gameState.phase === 'setup' ? (
         <TeamSetupScreen
           entries={gameState.setupEntries}
@@ -430,13 +427,7 @@ function LogoMark() {
   );
 }
 
-function LaunchScreen({
-  onOpenParents,
-  onStart,
-}: {
-  onOpenParents: () => void;
-  onStart: () => void;
-}) {
+function LaunchScreen({ onStart }: { onStart: () => void }) {
   const launchBrief =
     'Attention, Spy Bunnies. Burrow Command is online. Gather your whole team at the console and get ready to receive your secret spy names before the missions begin.';
 
@@ -507,12 +498,12 @@ function PrepScreen({
     <main className="screen prep-screen">
       <section className="hero-card">
         <div className="hero-copy">
-          <p className="eyebrow">Parents Setup</p>
+          <p className="eyebrow">Command Deck</p>
           <h2>Set the stage before the Spy Bunnies arrive.</h2>
           <p>
             Burrow Command runs the whole hunt from one shared screen. Use this
-            panel to review the story, prep the hiding spots, and reset the
-            mission if you need a clean start.
+            panel to review the story, prep the hiding spots, print the code
+            slips, and reset the mission if you need a clean start.
           </p>
         </div>
 
@@ -590,11 +581,11 @@ function ParentsPinScreen({
     <main className="screen">
       <section className="hero-card">
         <div className="hero-copy">
-          <p className="eyebrow">Parents Setup Locked</p>
+          <p className="eyebrow">Agent Access Locked</p>
           <h2>Enter the PIN to open the command controls.</h2>
           <p>
-            This keeps the admin clues, codes, and print pack tucked away from
-            curious Spy Bunnies.
+            This keeps the clue pack, mission codes, and print controls tucked
+            away from curious Spy Bunnies.
           </p>
         </div>
         <div className="status-panel parent-pin-panel">
@@ -1013,9 +1004,7 @@ function AliasScreen({
                   key={player.id}
                 >
                   <SpyPhotoFrame player={player} />
-                  <p className="role-tag">
-                    {locked ? 'Locked' : 'Waiting'} • {player.currentRole}
-                  </p>
+                  <p className="role-tag">{locked ? 'Locked In' : 'Waiting'}</p>
                   <h4>{player.spyAlias || 'Spy name pending'}</h4>
                   <p>
                     {player.realName}, age {player.age}
@@ -1033,7 +1022,7 @@ function AliasScreen({
 function BriefingScreen({ onLaunch }: { onLaunch: () => void }) {
   const briefingText = [
     ...STORY_SETUP,
-    'Everyone helps. Nobody grabs the clue alone. Every mission rotates the roles, so each bunny gets a fair turn in the spotlight.',
+    'Everyone helps. Nobody grabs a hidden code alone. The Finder Bunny changes every mission, so each bunny gets a fair turn to do the main search.',
   ].join(' ');
 
   return (
@@ -1074,15 +1063,11 @@ function BriefingScreen({ onLaunch }: { onLaunch: () => void }) {
 
       <section className="content-grid">
         <article className="panel">
-          <h3>Role Cards</h3>
-          <div className="role-grid compact-grid">
-            {Object.entries(ROLE_DESCRIPTIONS).map(([role, description]) => (
-              <article className="role-card" key={role}>
-                <p className="role-tag">{role}</p>
-                <p>{description}</p>
-              </article>
-            ))}
-          </div>
+          <h3>Finder Bunny Turn</h3>
+          <article className="role-card">
+            <p className="role-tag">Finder Bunny</p>
+            <p>{FINDER_RULE_DESCRIPTION}</p>
+          </article>
         </article>
 
         <article className="panel">
@@ -1140,8 +1125,8 @@ function MissionScreen({
             Mission {currentMission.id}: {currentMission.title}
           </h2>
           <p>
-            Stay together, solve the clue first, and let the Lead Bunny do the
-            main action when the team is ready.
+            Stay together, solve the clue first, and let only the Finder Bunny
+            check the hiding place when the team is ready.
           </p>
         </div>
         <div className="status-panel">
@@ -1152,7 +1137,7 @@ function MissionScreen({
             <span style={{ width: `${progress}%` }} />
           </div>
           <p className="status-copy">
-            Use the Spy ID Board above to see who is leading this mission.
+            Use the Spy ID Board above to see who is the Finder Bunny this mission.
           </p>
         </div>
       </section>
@@ -1166,9 +1151,13 @@ function MissionScreen({
             <p className="mission-kicker">Team Rule</p>
             <p>{currentMission.teamRule}</p>
           </div>
-          <p className="status-copy">
-            Check the Spy ID Board above to see each bunny&apos;s current role.
-          </p>
+          <div className="mission-role-guide">
+            <article className="role-guide-card">
+              <p className="role-tag">Finder Bunny</p>
+              <strong>{getFinderPlayer(players)?.spyAlias || 'Finder pending'}</strong>
+              <p>{FINDER_RULE_DESCRIPTION}</p>
+            </article>
+          </div>
         </article>
 
         <article className="panel mission-primary-panel">
@@ -1215,14 +1204,16 @@ function MissionTransmissionPanel({
 }: {
   mission: (typeof MISSIONS)[number];
 }) {
+  const transmissionText = `${mission.title}\n\n${mission.clueText}`;
+
   return (
     <NarratedRevealPanel
       buttonLabel="Listen Now"
       lockedLabel="Mission locked. Press Listen Now to hear and reveal it."
       panelTitle="Secure Mission Transmission"
       replayLabel="Listen Again"
-      speechText={`${mission.title}. ${mission.clueText.replace(/\n/g, ' ')} Team rule. ${mission.teamRule}`}
-      text={mission.clueText}
+      speechText={transmissionText}
+      text={transmissionText}
     />
   );
 }
@@ -1363,9 +1354,30 @@ function CompleteScreen({
   players: Player[];
   onReplay: () => void;
 }) {
+  const specialPrizePhrase = 'Secret squirrels stole the jellybeans!';
+  const victoryText = `Treasure secured. The Spy Bunnies completed all twelve missions, cracked every code, and found the treasure together. Now gather close and say this special prize phrase to Mission Control all at the same time: ${specialPrizePhrase}`;
+
   return (
     <main className="screen">
       <section className="hero-card celebration-card">
+        <div className="celebration-burst" aria-hidden="true">
+          {Array.from({ length: 24 }, (_, index) => (
+            <span
+              className="celebration-confetti"
+              key={`confetti-${index}`}
+              style={
+                {
+                  '--delay': `${(index % 6) * 0.35}s`,
+                  '--duration': `${5.5 + (index % 5) * 0.7}s`,
+                  '--left': `${4 + ((index * 7) % 92)}%`,
+                  '--drift': `${-28 + (index % 7) * 9}px`,
+                  '--rotation': `${(index % 8) * 45}deg`,
+                } as CSSProperties
+              }
+            />
+          ))}
+        </div>
+
         <div className="hero-copy">
           <p className="eyebrow">Treasure Secured</p>
           <h2>Spy Bunnies never quit.</h2>
@@ -1373,14 +1385,8 @@ function CompleteScreen({
             buttonLabel="Play Victory Transmission"
             lockedLabel="Victory transmission locked. Press play to hear and reveal it."
             panelTitle="Victory Transmission"
-            text="Treasure secured. The Spy Bunnies completed all twelve missions, cracked every code, and found the treasure together."
+            text={victoryText}
           />
-        </div>
-
-        <div className="celebration-eggs" aria-hidden="true">
-          <span />
-          <span />
-          <span />
         </div>
       </section>
 
@@ -1393,6 +1399,17 @@ function CompleteScreen({
             <li>12 missions were solved as one team.</li>
             <li>The final treasure was secured together.</li>
           </ul>
+        </article>
+
+        <article className="panel">
+          <h3>Special Prize Phrase</h3>
+          <p className="status-copy">
+            Say this together to Mission Control all at the same time:
+          </p>
+          <p className="victory-phrase">{specialPrizePhrase}</p>
+          <p className="status-copy">
+            If the whole team says it together, the special prize is unlocked.
+          </p>
         </article>
 
         <article className="panel">
@@ -1415,6 +1432,10 @@ function CompleteScreen({
   );
 }
 
+function getFinderPlayer(players: Player[]) {
+  return players.find((player) => player.currentRole === 'Lead Bunny') ?? players[0];
+}
+
 function RoleRoster({ players }: { players: Player[] }) {
   return (
     <div className="role-grid spy-id-grid">
@@ -1422,7 +1443,9 @@ function RoleRoster({ players }: { players: Player[] }) {
         <article className="role-card spy-id-card" key={player.id}>
           <p className="spy-id-kicker">Burrow Command Spy ID</p>
           <SpyPhotoFrame player={player} />
-          <p className="role-tag">{player.currentRole}</p>
+          <p className="role-tag">
+            {player.currentRole === 'Lead Bunny' ? 'Finder Bunny' : 'Spy Bunny'}
+          </p>
           <p className="spy-id-line">
             <span>Codename</span>
             <strong>{player.spyAlias || player.realName}</strong>
@@ -1436,8 +1459,17 @@ function RoleRoster({ players }: { players: Player[] }) {
             <strong>{player.age}</strong>
           </p>
           <p className="spy-id-line">
-            <span>Assignment</span>
-            <strong>{player.currentRole}</strong>
+            <span>Mission Status</span>
+            <strong>
+              {player.currentRole === 'Lead Bunny'
+                ? 'Current Finder'
+                : 'Waiting For Turn'}
+            </strong>
+          </p>
+          <p className="spy-id-note">
+            {player.currentRole === 'Lead Bunny'
+              ? 'Checks the hiding place this mission.'
+              : 'Helps solve the clue and stays with the team.'}
           </p>
         </article>
       ))}
@@ -1471,11 +1503,28 @@ function SpyIdDock({
       ) : (
         <div className="spy-id-dock-strip">
           {players.map((player) => (
-            <article className="spy-id-dock-card" key={player.id}>
+            <article
+              className={`spy-id-dock-card ${
+                player.currentRole === 'Lead Bunny' ? 'spy-id-dock-card-finder' : ''
+              }`}
+              key={player.id}
+            >
+              {player.currentRole === 'Lead Bunny' ? (
+                <span className="finder-badge" aria-label="Current Finder Bunny">
+                  ★ Finder
+                </span>
+              ) : null}
               <SpyPhotoFrame player={player} />
               <div className="spy-id-dock-copy">
                 <p>{player.spyAlias || player.realName}</p>
-                <span>{player.currentRole}</span>
+                <span>
+                  {player.currentRole === 'Lead Bunny' ? 'Finder Bunny' : 'Spy Bunny'}
+                </span>
+                <small>
+                  {player.currentRole === 'Lead Bunny'
+                    ? 'Checks the hiding place this mission.'
+                    : 'Helps solve and stays together.'}
+                </small>
               </div>
             </article>
           ))}

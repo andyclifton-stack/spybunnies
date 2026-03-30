@@ -191,6 +191,7 @@ button {
 }
 
 .spy-id-dock-card {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -202,13 +203,69 @@ button {
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
 }
 
+.spy-id-dock-card-finder {
+  padding-top: 26px;
+  border-color: rgba(255, 203, 107, 0.5);
+  background:
+    linear-gradient(180deg, rgba(29, 25, 12, 0.98), rgba(13, 24, 18, 0.94)),
+    rgba(7, 21, 18, 0.95);
+  box-shadow:
+    0 0 0 1px rgba(255, 203, 107, 0.16),
+    0 12px 28px rgba(0, 0, 0, 0.28),
+    0 0 24px rgba(255, 203, 107, 0.12);
+}
+
+.finder-badge {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ffdd89, #ffbf47);
+  color: #2d2410;
+  font-size: 0;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 0 16px rgba(255, 203, 107, 0.3);
+}
+
+.finder-badge::before {
+  content: "";
+  width: 0.78rem;
+  height: 0.78rem;
+  flex: 0 0 auto;
+  background: currentColor;
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 92%,
+    50% 71%,
+    21% 92%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+}
+
+.finder-badge::after {
+  content: "Finder";
+  font-size: 0.72rem;
+}
+
 .spy-id-dock-copy {
   display: grid;
   gap: 2px;
 }
 
 .spy-id-dock-copy p,
-.spy-id-dock-copy span {
+.spy-id-dock-copy span,
+.spy-id-dock-copy small {
   margin: 0;
 }
 
@@ -222,6 +279,11 @@ button {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--muted);
+}
+
+.spy-id-dock-copy small {
+  font-size: 0.72rem;
+  color: rgba(187, 255, 214, 0.82);
 }
 
 .hero-card,
@@ -425,6 +487,11 @@ button {
   font-size: 1.05rem;
   color: var(--ink);
   text-shadow: 0 0 10px rgba(87, 255, 177, 0.15);
+}
+
+.spy-id-note {
+  margin: 4px 0 0;
+  color: var(--muted);
 }
 
 .role-card h4 {
@@ -769,6 +836,35 @@ button {
   background: rgba(87, 255, 177, 0.08);
 }
 
+.mission-role-guide {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-top: 18px;
+}
+
+.role-guide-card {
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(87, 255, 177, 0.16);
+  background: rgba(7, 21, 18, 0.9);
+}
+
+.role-guide-card strong,
+.role-guide-card p {
+  display: block;
+  margin: 0;
+}
+
+.role-guide-card strong {
+  margin-top: 10px;
+}
+
+.role-guide-card p:last-child {
+  margin-top: 8px;
+  color: var(--muted);
+}
+
 .progress-bar {
   width: 100%;
   height: 12px;
@@ -786,20 +882,51 @@ button {
 }
 
 .celebration-card {
+  position: relative;
   align-items: center;
+  overflow: hidden;
 }
 
-.celebration-eggs {
-  display: flex;
-  gap: 16px;
+.celebration-burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
-.celebration-eggs span {
-  width: 40px;
-  height: 56px;
-  border-radius: 50% 50% 45% 45%;
-  background: linear-gradient(180deg, #ffb25f, #ff8c42);
-  box-shadow: 18px 0 0 rgba(88, 165, 240, 0.8), 36px 0 0 rgba(109, 163, 77, 0.8);
+.celebration-confetti {
+  position: absolute;
+  top: -14%;
+  left: var(--left);
+  width: 16px;
+  height: 26px;
+  border-radius: 6px;
+  opacity: 0.92;
+  transform: translateX(0) rotate(0deg);
+  background: linear-gradient(180deg, #ffdd89, #ff8c42);
+  box-shadow:
+    28px 12px 0 rgba(114, 245, 184, 0.9),
+    -22px 26px 0 rgba(109, 163, 255, 0.85),
+    10px 44px 0 rgba(255, 128, 162, 0.88);
+  animation:
+    confetti-fall var(--duration) linear infinite,
+    confetti-flicker 1.4s ease-in-out infinite;
+  animation-delay: var(--delay);
+}
+
+.victory-phrase {
+  margin: 16px 0 0;
+  padding: 18px 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 203, 107, 0.35);
+  background:
+    linear-gradient(180deg, rgba(43, 33, 12, 0.96), rgba(26, 22, 11, 0.92)),
+    rgba(255, 203, 107, 0.08);
+  color: #ffe39f;
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  text-shadow: 0 0 14px rgba(255, 203, 107, 0.24);
 }
 
 .terminal-hero {
@@ -925,6 +1052,27 @@ button {
   100% {
     transform: scale(1) rotate(0deg);
     opacity: 1;
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translate3d(0, -10%, 0) rotate(0deg);
+  }
+
+  100% {
+    transform: translate3d(var(--drift), 135vh, 0) rotate(calc(var(--rotation) + 540deg));
+  }
+}
+
+@keyframes confetti-flicker {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+
+  50% {
+    opacity: 0.65;
   }
 }
 
