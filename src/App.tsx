@@ -3,7 +3,6 @@ import {
   APP_SUBTITLE,
   APP_TITLE,
   BUNNY_SWAP_PENALTY,
-  DRESS_UP_OPTIONS,
   FINDER_RULE_DESCRIPTION,
   GOLDEN_RULES,
   MISSIONS,
@@ -70,9 +69,20 @@ function App() {
 
   useEffect(() => {
     setCodeInput('');
-    setCodeFeedback('');
-    setFeedbackTone('idle');
   }, [gameState.currentMission, gameState.phase]);
+
+  useEffect(() => {
+    if (feedbackTone !== 'success' || !codeFeedback) {
+      return undefined;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setCodeFeedback('');
+      setFeedbackTone('idle');
+    }, 4200);
+
+    return () => window.clearTimeout(timeout);
+  }, [codeFeedback, feedbackTone]);
 
   const prepOpen = prepOverlayOpen;
   const currentMission = MISSIONS[gameState.currentMission];
@@ -180,6 +190,8 @@ function App() {
   }
 
   function beginMissionOne(): void {
+    setCodeFeedback('');
+    setFeedbackTone('idle');
     setGameState((current) => ({
       ...current,
       phase: 'mission',
@@ -227,8 +239,8 @@ function App() {
 
     setCodeFeedback(
       isFinalMission
-        ? 'Victory transmission unlocked. Spy Bunnies, mission complete!'
-        : 'Code accepted. Press Listen Now for the next mission.',
+        ? 'Mission complete! Victory transmission unlocked!'
+        : 'Code accepted! Next mission unlocked. Look up and press Listen Now!',
     );
     setFeedbackTone('success');
 
@@ -236,6 +248,19 @@ function App() {
       playSound(playVictorySound);
     } else {
       playSound(playSuccessSound);
+      if (typeof window !== 'undefined') {
+        window.setTimeout(() => {
+          if (window.navigator.userAgent.toLowerCase().includes('jsdom')) {
+            return;
+          }
+
+          try {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } catch {
+            // JSDOM does not implement scrollTo.
+          }
+        }, 280);
+      }
     }
   }
 
@@ -650,6 +675,8 @@ function TeamSetupScreen({
   ) => void;
   onSubmit: () => void;
 }) {
+  const savedPhotoCount = entries.filter((entry) => entry.spyPhoto.trim()).length;
+
   return (
     <main className="screen">
       <section className="hero-card split-hero">
@@ -657,9 +684,12 @@ function TeamSetupScreen({
           <p className="eyebrow">Team Setup</p>
           <h2>Enter the real names and ages for all 4 Spy Bunnies.</h2>
         </div>
-        <div className="status-panel">
+        <div className="status-panel setup-status-panel">
+          <p className="status-chip">Spy IDs saved: {savedPhotoCount} / 4</p>
           <p className="status-copy">
-            Every bunny needs a saved Spy ID photo before the team can move on.
+            {savedPhotoCount === entries.length
+              ? 'Next step: press Build the Team Roster.'
+              : 'Next step: save every Spy ID photo.'}
           </p>
         </div>
       </section>
@@ -705,6 +735,7 @@ function SpySetupCard({
   const [cameraOpen, setCameraOpen] = useState(false);
   const [cameraError, setCameraError] = useState('');
   const [draftPhoto, setDraftPhoto] = useState('');
+  const photoSaved = Boolean(entry.spyPhoto.trim());
 
   useEffect(() => {
     return () => {
@@ -834,7 +865,8 @@ function SpySetupCard({
         <span className="field-label">Spy ID photo</span>
 
         {entry.spyPhoto ? (
-          <div className="photo-preview-card">
+          <div className="photo-preview-card photo-preview-card-saved">
+            <p className="photo-saved-badge">Spy ID Saved</p>
             <img
               alt={`Spy ID for ${entry.realName || `Bunny ${index + 1}`}`}
               className="spy-photo-preview"
@@ -872,6 +904,12 @@ function SpySetupCard({
             </button>
           </div>
         )}
+
+        <p className={`photo-progress-note ${photoSaved ? 'photo-progress-note-saved' : ''}`}>
+          {photoSaved
+            ? 'Mission Control has locked in this Spy ID.'
+            : 'This bunny still needs a saved Spy ID.'}
+        </p>
 
         {cameraError ? (
           <p className="feedback-banner feedback-error">{cameraError}</p>
@@ -990,6 +1028,10 @@ function AliasScreen({
                 <span>{activePlayer.spyAlias}</span>
               </div>
 
+              <p className="next-step-callout">
+                Next step: if this codename feels right, press <strong>Lock In Spy Name</strong>.
+              </p>
+
               <div className="button-row">
                 <button type="button" className="primary-button" onClick={onRoll}>
                   Reroll Spy Name
@@ -1043,6 +1085,9 @@ function BriefingScreen({ onLaunch }: { onLaunch: () => void }) {
   const briefingText = [
     ...STORY_SETUP,
     'Everyone helps. Nobody grabs a hidden code alone. The Finder Bunny changes every mission, so each bunny gets a fair turn to do the main search.',
+    `If anyone wants to swap early, they must do the Bunny Swap Penalty. ${BUNNY_SWAP_PENALTY.join(
+      ' ',
+    )}`,
   ].join(' ');
 
   return (
@@ -1063,21 +1108,12 @@ function BriefingScreen({ onLaunch }: { onLaunch: () => void }) {
         </button>
       </section>
 
-      <section className="content-grid">
+      <section className="screen">
         <article className="panel">
           <h3>Story Setup</h3>
           {STORY_SETUP.map((line) => (
             <p key={line}>{line}</p>
           ))}
-        </article>
-
-        <article className="panel">
-          <h3>Dress-Up Spark</h3>
-          <ul className="detail-list">
-            {DRESS_UP_OPTIONS.map((option) => (
-              <li key={option}>{option}</li>
-            ))}
-          </ul>
         </article>
       </section>
 
@@ -1133,6 +1169,7 @@ function MissionScreen({
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }) {
   const progress = Math.round((completedCount / totalMissions) * 100);
+  const finderPlayer = getFinderPlayer(players);
 
   return (
     <main className="screen">
@@ -1149,12 +1186,16 @@ function MissionScreen({
             check the hiding place when the team is ready.
           </p>
         </div>
-        <div className="status-panel">
+        <div className="status-panel mission-status-panel">
           <p className="status-copy">
             Progress: {completedCount} solved
           </p>
           <div className="progress-bar" aria-hidden="true">
             <span style={{ width: `${progress}%` }} />
+          </div>
+          <div className="finder-callout">
+            <p className="mission-kicker">Current Finder Bunny</p>
+            <strong>{finderPlayer?.spyAlias || 'Finder pending'}</strong>
           </div>
           <p className="status-copy">
             Use the Spy ID Board above to see who is the Finder Bunny this mission.
@@ -1163,6 +1204,12 @@ function MissionScreen({
       </section>
 
       <section className="screen">
+        {feedbackTone === 'success' && codeFeedback ? (
+          <p className="feedback-banner feedback-success mission-success-banner">
+            {codeFeedback}
+          </p>
+        ) : null}
+
         <MissionTransmissionPanel mission={currentMission} />
 
         <article className="panel">
@@ -1181,12 +1228,14 @@ function MissionScreen({
         </article>
 
         <article className="panel mission-primary-panel">
+          <p className="mission-kicker">Next Step</p>
           <h3>Mission Control Code Entry</h3>
-          <p>When the team solves the clue, enter the four-letter mission code.</p>
+          <p>Cracked the clue? Type the four-letter mission code and send it to Mission Control.</p>
           <form className="code-form" onSubmit={onSubmit}>
             <label className="field field-inline">
               <span>Mission code</span>
               <input
+                className="mission-code-input"
                 type="text"
                 value={codeInput}
                 onChange={(event) => onCodeChange(event.target.value)}
@@ -1195,12 +1244,12 @@ function MissionScreen({
                 maxLength={4}
               />
             </label>
-            <button type="submit" className="primary-button">
-              Unlock Next Mission
+            <button type="submit" className="primary-button code-submit-button">
+              Send Code To Mission Control
             </button>
           </form>
 
-          {codeFeedback ? (
+          {codeFeedback && feedbackTone === 'error' ? (
             <p
               className={`feedback-banner ${
                 feedbackTone === 'error'
@@ -1411,6 +1460,18 @@ function CompleteScreen({
       </section>
 
       <section className="content-grid">
+        <article className="panel victory-phrase-panel">
+          <p className="mission-kicker">Shout This Together</p>
+          <h3>Special Prize Phrase</h3>
+          <p className="status-copy">
+            Say this together to Mission Control all at the same time:
+          </p>
+          <p className="victory-phrase">{specialPrizePhrase}</p>
+          <p className="victory-action-note">
+            When the whole team says it together, the special prize is unlocked.
+          </p>
+        </article>
+
         <article className="panel">
           <h3>Mission Summary</h3>
           <p>The Spy ID Board above still shows the full squad.</p>
@@ -1419,17 +1480,6 @@ function CompleteScreen({
             <li>12 missions were solved as one team.</li>
             <li>The special prize phrase was unlocked together.</li>
           </ul>
-        </article>
-
-        <article className="panel">
-          <h3>Special Prize Phrase</h3>
-          <p className="status-copy">
-            Say this together to Mission Control all at the same time:
-          </p>
-          <p className="victory-phrase">{specialPrizePhrase}</p>
-          <p className="status-copy">
-            If the whole team says it together, the special prize is unlocked.
-          </p>
         </article>
 
         <article className="panel">
@@ -1460,8 +1510,16 @@ function RoleRoster({ players }: { players: Player[] }) {
   return (
     <div className="role-grid spy-id-grid">
       {players.map((player) => (
-        <article className="role-card spy-id-card" key={player.id}>
+        <article
+          className={`role-card spy-id-card ${
+            player.currentRole === 'Lead Bunny' ? 'spy-id-card-finder' : ''
+          }`}
+          key={player.id}
+        >
           <p className="spy-id-kicker">Burrow Command Spy ID</p>
+          {player.currentRole === 'Lead Bunny' ? (
+            <span className="finder-badge" aria-label="Current Finder Bunny" />
+          ) : null}
           <SpyPhotoFrame player={player} />
           <p className="role-tag">
             {player.currentRole === 'Lead Bunny' ? 'Finder Bunny' : 'Spy Bunny'}
@@ -1530,9 +1588,7 @@ function SpyIdDock({
               key={player.id}
             >
               {player.currentRole === 'Lead Bunny' ? (
-                <span className="finder-badge" aria-label="Current Finder Bunny">
-                  ★ Finder
-                </span>
+                <span className="finder-badge" aria-label="Current Finder Bunny" />
               ) : null}
               <SpyPhotoFrame player={player} />
               <div className="spy-id-dock-copy">
@@ -1629,74 +1685,74 @@ function renderTransmissionText(revealedText: string, panelKey: string) {
 
 function createWhatsAppMissionPack(_missions: typeof MISSIONS): string {
   return [
-    '🐰🕵️ *Spy Bunnies Mission Control* 🕵️🐰',
+    '\u{1F430}\u{1F575}\uFE0F *Spy Bunnies Mission Control* \u{1F575}\uFE0F\u{1F430}',
     '',
-    'Here’s the full plan for the hunt. Hide the *code slips* in these places. The app gives the clue, they find the location, grab the code, then come back to Mission Control.',
+    'Here\u2019s the full plan for the hunt. Hide the *code slips* in these places. The app gives the clue, they find the location, grab the code, then come back to Mission Control.',
     '',
-    '1️⃣ *Spy Bunnies Assemble*',
+    '1\uFE0F\u20E3 *Spy Bunnies Assemble*',
     'Clue: cold keeper',
     'Code: *BEEP*',
     'Hide: fridge',
     '',
-    '2️⃣ *Frozen Fingers*',
+    '2\uFE0F\u20E3 *Frozen Fingers*',
     'Clue: frozen things + Bunny Chain hop',
     'Code: *HOPS*',
     'Hide: freezer',
     '',
-    '3️⃣ *Hop Code*',
+    '3\uFE0F\u20E3 *Hop Code*',
     'Clue: unscramble DEB',
     'Code: *NIBS*',
     'Hide: bed / under pillow',
     '',
-    '4️⃣ *Bedroom Team Scan*',
+    '4\uFE0F\u20E3 *Bedroom Team Scan*',
     'Clue: find 4 things in bedroom, then TV riddle',
     'Code: *GLOW*',
     'Hide: by TV in lounge',
     '',
-    '5️⃣ *Secret Acrostic*',
+    '5\uFE0F\u20E3 *Secret Acrostic*',
     'Clue: acrostic for JANET',
     'Code: *JOLT*',
     'Hide: under Janet the robot cleaner',
     '',
-    '6️⃣ *Spoon Balance Operation*',
+    '6\uFE0F\u20E3 *Spoon Balance Operation*',
     'Clue: spoon challenge then books riddle',
     'Code: *MINT*',
     'Hide: inside a book or on bookshelf',
     '',
-    '7️⃣ *Book Bunny Puzzle*',
+    '7\uFE0F\u20E3 *Book Bunny Puzzle*',
     'Clue: every second letter spells SHOES',
     'Code: *DASH*',
     'Hide: shoe area',
     '',
-    '8️⃣ *Silly Parade Mission*',
+    '8\uFE0F\u20E3 *Silly Parade Mission*',
     'Clue: odd shoes parade, then cupboard under stairs',
     'Code: *ZOOM*',
     'Hide: cupboard under the stairs',
     '',
-    '9️⃣ *Silent Spy Test*',
+    '9\uFE0F\u20E3 *Silent Spy Test*',
     'Clue: silent walk, "I run but have no feet"',
     'Code: *WAVE*',
     'Hide: by bathroom sink',
     '',
-    '🔟 *Guided Bunny*',
+    '\u{1F51F} *Guided Bunny*',
     'Clue: trust mission, then microwave riddle',
     'Code: *PING*',
     'Hide: near microwave',
     '',
-    '1️⃣1️⃣ *Bunny Cipher*',
+    '1\uFE0F\u20E31\uFE0F\u20E3 *Bunny Cipher*',
     'Clue: cipher for CONSERVATORY',
     'Code: *BRIM*',
     'Hide: conservatory',
     '',
-    '1️⃣2️⃣ *Final Mission*',
+    '1\uFE0F\u20E32\uFE0F\u20E3 *Final Mission*',
     'Clue: under the softest of all',
     'Code: *GOLD*',
     'Hide: sofa / cushions',
     '',
-    'Final note 🎁',
+    'Final note \u{1F381}',
     'After mission 12, they say the special phrase together to Mission Control and then get the prize.',
     '',
-    '🐿 Code phrase: *Secret squirrels stole the jellybeans!*',
+    '\u{1F43F} Code phrase: *Secret squirrels stole the jellybeans!*',
   ].join('\n');
 }
 

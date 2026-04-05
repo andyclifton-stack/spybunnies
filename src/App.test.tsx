@@ -42,7 +42,7 @@ describe('App', () => {
     await user.type(screen.getByLabelText(/bunny 4 age/i), '6');
 
     expect(
-      screen.getByText(/every bunny needs a saved spy id photo before the team can move on/i),
+      screen.getByText(/next step: save every spy id photo/i),
     ).toBeInTheDocument();
 
     await user.click(
@@ -191,7 +191,7 @@ describe('App', () => {
 
     await user.type(screen.getByLabelText(/mission code/i), 'NIBS');
     await user.click(
-      screen.getByRole('button', { name: /unlock next mission/i }),
+      screen.getByRole('button', { name: /send code to mission control/i }),
     );
 
     expect(
@@ -206,7 +206,7 @@ describe('App', () => {
     await user.clear(screen.getByLabelText(/mission code/i));
     await user.type(screen.getByLabelText(/mission code/i), 'BEEP');
     await user.click(
-      screen.getByRole('button', { name: /unlock next mission/i }),
+      screen.getByRole('button', { name: /send code to mission control/i }),
     );
 
     expect(
