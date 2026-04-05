@@ -1627,28 +1627,77 @@ function renderTransmissionText(revealedText: string, panelKey: string) {
   });
 }
 
-function createWhatsAppMissionPack(missions: typeof MISSIONS): string {
-  const lines = [
-    'Spy Bunnies Mission Control',
+function createWhatsAppMissionPack(_missions: typeof MISSIONS): string {
+  return [
+    '🐰🕵️ *Spy Bunnies Mission Control* 🕵️🐰',
     '',
-    'Code Slip Pack',
-    'Hide each 4-letter code slip in the place shown below.',
-    'The app gives the clue, they find the location, bring back the code, then unlock the next mission.',
+    'Here’s the full plan for the hunt. Hide the *code slips* in these places. The app gives the clue, they find the location, grab the code, then come back to Mission Control.',
     '',
-  ];
-
-  missions.forEach((mission) => {
-    lines.push(`Mission ${mission.id}: ${mission.title}`);
-    lines.push(`Code: ${mission.acceptedCodes[0]}`);
-    lines.push(`Hide: ${mission.prepHint}`);
-    lines.push('Clue:');
-    lines.push(mission.clueText);
-    lines.push('');
-  });
-
-  lines.push('Special prize phrase: Secret squirrels stole the jellybeans!');
-
-  return lines.join('\n');
+    '1️⃣ *Spy Bunnies Assemble*',
+    'Clue: cold keeper',
+    'Code: *BEEP*',
+    'Hide: fridge',
+    '',
+    '2️⃣ *Frozen Fingers*',
+    'Clue: frozen things + Bunny Chain hop',
+    'Code: *HOPS*',
+    'Hide: freezer',
+    '',
+    '3️⃣ *Hop Code*',
+    'Clue: unscramble DEB',
+    'Code: *NIBS*',
+    'Hide: bed / under pillow',
+    '',
+    '4️⃣ *Bedroom Team Scan*',
+    'Clue: find 4 things in bedroom, then TV riddle',
+    'Code: *GLOW*',
+    'Hide: by TV in lounge',
+    '',
+    '5️⃣ *Secret Acrostic*',
+    'Clue: acrostic for JANET',
+    'Code: *JOLT*',
+    'Hide: under Janet the robot cleaner',
+    '',
+    '6️⃣ *Spoon Balance Operation*',
+    'Clue: spoon challenge then books riddle',
+    'Code: *MINT*',
+    'Hide: inside a book or on bookshelf',
+    '',
+    '7️⃣ *Book Bunny Puzzle*',
+    'Clue: every second letter spells SHOES',
+    'Code: *DASH*',
+    'Hide: shoe area',
+    '',
+    '8️⃣ *Silly Parade Mission*',
+    'Clue: odd shoes parade, then cupboard under stairs',
+    'Code: *ZOOM*',
+    'Hide: cupboard under the stairs',
+    '',
+    '9️⃣ *Silent Spy Test*',
+    'Clue: silent walk, "I run but have no feet"',
+    'Code: *WAVE*',
+    'Hide: by bathroom sink',
+    '',
+    '🔟 *Guided Bunny*',
+    'Clue: trust mission, then microwave riddle',
+    'Code: *PING*',
+    'Hide: near microwave',
+    '',
+    '1️⃣1️⃣ *Bunny Cipher*',
+    'Clue: cipher for CONSERVATORY',
+    'Code: *BRIM*',
+    'Hide: conservatory',
+    '',
+    '1️⃣2️⃣ *Final Mission*',
+    'Clue: under the softest of all',
+    'Code: *GOLD*',
+    'Hide: sofa / cushions',
+    '',
+    'Final note 🎁',
+    'After mission 12, they say the special phrase together to Mission Control and then get the prize.',
+    '',
+    '🐿 Code phrase: *Secret squirrels stole the jellybeans!*',
+  ].join('\n');
 }
 
 export default App;
