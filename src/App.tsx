@@ -281,6 +281,16 @@ function App() {
     }
   }
 
+  function shareAdminPackOnWhatsApp(): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const message = createWhatsAppMissionPack(MISSIONS);
+    const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
   const showSpyIdDock =
     gameState.players.length > 0 &&
     ['aliases', 'briefing', 'mission', 'complete'].includes(gameState.phase);
@@ -329,6 +339,7 @@ function App() {
             onStart={beginSetup}
             onClose={closeParentsSetup}
             onPrint={printAdminPack}
+            onShareWhatsApp={shareAdminPackOnWhatsApp}
             onReset={resetGame}
           />
         ) : (
@@ -482,6 +493,7 @@ function PrepScreen({
   onStart,
   onClose,
   onPrint,
+  onShareWhatsApp,
   onReset,
 }: {
   currentPhase: GamePhase;
@@ -490,6 +502,7 @@ function PrepScreen({
   onStart: () => void;
   onClose: () => void;
   onPrint: () => void;
+  onShareWhatsApp: () => void;
   onReset: () => void;
 }) {
   const hasProgress = currentPhase !== 'prep';
@@ -555,6 +568,13 @@ function PrepScreen({
         ) : null}
         <button type="button" className="secondary-button" onClick={onPrint}>
           Print Code Pack
+        </button>
+        <button
+          type="button"
+          className="secondary-button"
+          onClick={onShareWhatsApp}
+        >
+          Share on WhatsApp
         </button>
         <button type="button" className="danger-button" onClick={onReset}>
           Reset Game
@@ -1605,6 +1625,30 @@ function renderTransmissionText(revealedText: string, panelKey: string) {
       </span>
     );
   });
+}
+
+function createWhatsAppMissionPack(missions: typeof MISSIONS): string {
+  const lines = [
+    'Spy Bunnies Mission Control',
+    '',
+    'Code Slip Pack',
+    'Hide each 4-letter code slip in the place shown below.',
+    'The app gives the clue, they find the location, bring back the code, then unlock the next mission.',
+    '',
+  ];
+
+  missions.forEach((mission) => {
+    lines.push(`Mission ${mission.id}: ${mission.title}`);
+    lines.push(`Code: ${mission.acceptedCodes[0]}`);
+    lines.push(`Hide: ${mission.prepHint}`);
+    lines.push('Clue:');
+    lines.push(mission.clueText);
+    lines.push('');
+  });
+
+  lines.push('Special prize phrase: Secret squirrels stole the jellybeans!');
+
+  return lines.join('\n');
 }
 
 export default App;
