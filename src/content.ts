@@ -4,7 +4,7 @@ export const APP_TITLE = 'Burrow Command';
 export const APP_SUBTITLE = 'Spy Bunny Mission Base';
 
 export const STORY_SETUP = [
-  'Attention, Spy Bunnies. The Easter Bunny has hidden the treasure somewhere in this house.',
+  'Attention, Spy Bunnies. The special prize will be revealed only when all 12 missions are complete.',
   'You must complete 12 secret missions as one team. No racing ahead, no grabbing a hidden code alone, and no running to the next mission before everyone arrives together.',
   'Every mission has one Finder Bunny, and that turn changes each round so everyone gets a fair chance.',
 ];
@@ -112,9 +112,9 @@ export const MISSIONS: Mission[] = [
     id: 5,
     title: 'Secret Acrostic',
     clueText:
-      'Read the first letter of each line:\n\nCounting hours every day\nLooking quietly on display\nOn the wall or shelf I stay\nClicking never, come what may\nKeeping time in my own way',
+      'Read the first letter of each line:\n\nJust where the dusty crumbs all hide\nAround the floor I like to glide\nNoisy? Not much. I hum instead\nEvery day I tidy up ahead\nCheck my bottom for your code',
     acceptedCodes: ['JOLT'],
-    prepHint: 'Hide the JOLT code slip by a clock.',
+    prepHint: 'Hide the JOLT code slip under Janet the robot cleaner.',
     teamRule:
       'Nobody moves until the whole team says, "Code cracked."',
     leadPrompt:
@@ -184,9 +184,9 @@ export const MISSIONS: Mission[] = [
     id: 11,
     title: 'Bunny Cipher',
     clueText:
-      'Move each letter back by one in the alphabet:\n\nHBNFT SPPN\n\nAsk one person at a time for help. Nobody shouts all at once.',
+      'Move each letter back by one in the alphabet:\n\nDPOTFSWBUPSZ\n\nAsk one person at a time for help. Nobody shouts all at once.',
     acceptedCodes: ['BRIM'],
-    prepHint: 'Hide the BRIM code slip in the games room.',
+    prepHint: 'Hide the BRIM code slip in the conservatory.',
     teamRule:
       'Take turns speaking so the code is cracked calmly.',
     leadPrompt:
@@ -199,10 +199,10 @@ export const MISSIONS: Mission[] = [
       'Final team test.\nBefore the last location is revealed:\n- each bunny says one helpful thing another bunny did\n- all four put their hands together\n- everyone says, "Spy Bunnies never quit!"\n\nFinal clue:\nWhere people flop and chat and sprawl,\nLook underneath the softest of all.',
     acceptedCodes: ['GOLD'],
     prepHint:
-      'Hide the GOLD code slip at the sofa or cushions, with the final treasure ready there too.',
+      'Hide the GOLD code slip at the sofa or cushions.',
     teamRule:
       'The mission only counts after every bunny shares something kind about another teammate.',
     leadPrompt:
-      'The Finder Bunny makes the final treasure check once the whole team finishes the kindness round.',
+      'The Finder Bunny makes the final code check once the whole team finishes the kindness round.',
   },
 ];

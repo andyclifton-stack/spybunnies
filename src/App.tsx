@@ -227,7 +227,7 @@ function App() {
 
     setCodeFeedback(
       isFinalMission
-        ? 'Treasure unlocked. Spy Bunnies, mission complete!'
+        ? 'Victory transmission unlocked. Spy Bunnies, mission complete!'
         : 'Code accepted. Press Listen Now for the next mission.',
     );
     setFeedbackTone('success');
@@ -460,7 +460,7 @@ function LaunchScreen({ onStart }: { onStart: () => void }) {
           <h3>Spy Console Status</h3>
           <div className="status-stack">
             <p className="console-line">CHANNEL: HOUSE OPS</p>
-            <p className="console-line">MODE: TREASURE RECOVERY</p>
+          <p className="console-line">MODE: PRIZE UNLOCK</p>
             <p className="console-line">RULE: NO BUNNY LEFT BEHIND</p>
           </div>
         </article>
@@ -1355,7 +1355,7 @@ function CompleteScreen({
   onReplay: () => void;
 }) {
   const specialPrizePhrase = 'Secret squirrels stole the jellybeans!';
-  const victoryText = `Treasure secured. The Spy Bunnies completed all twelve missions, cracked every code, and found the treasure together. Now gather close and say this special prize phrase to Mission Control all at the same time: ${specialPrizePhrase}`;
+  const victoryText = `Mission complete. The Spy Bunnies completed all twelve missions, cracked every code, and unlocked the special prize phrase together. Now gather close and say this special prize phrase to Mission Control all at the same time: ${specialPrizePhrase}`;
 
   return (
     <main className="screen">
@@ -1379,7 +1379,7 @@ function CompleteScreen({
         </div>
 
         <div className="hero-copy">
-          <p className="eyebrow">Treasure Secured</p>
+          <p className="eyebrow">Mission Complete</p>
           <h2>Spy Bunnies never quit.</h2>
           <NarratedRevealPanel
             buttonLabel="Play Victory Transmission"
@@ -1397,7 +1397,7 @@ function CompleteScreen({
           <ul className="detail-list">
             <li>{players.length} Spy Bunnies completed the mission.</li>
             <li>12 missions were solved as one team.</li>
-            <li>The final treasure was secured together.</li>
+            <li>The special prize phrase was unlocked together.</li>
           </ul>
         </article>
 
@@ -1418,7 +1418,7 @@ function CompleteScreen({
             <li>They stayed together.</li>
             <li>They rotated the spotlight fairly.</li>
             <li>They solved every clue before moving on.</li>
-            <li>They found the treasure as one team.</li>
+            <li>They unlocked the special prize as one team.</li>
           </ul>
         </article>
       </section>
